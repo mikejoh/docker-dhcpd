@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+    dhcpd:
+        build: .
+        restart: unless-stopped
+        networks:
+            internal_network:
+                ipv4_address: 10.0.99.6
+
+        volumes:
+            - ./dhcpd.conf:/etc/dhcp/dhcpd.conf
+
+networks:
+    internal_network:
+        external:
+            name: macvlan0
