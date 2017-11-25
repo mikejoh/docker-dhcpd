@@ -29,36 +29,6 @@ forwarding-options {
 
 ![dhcpd-as-container](https://user-images.githubusercontent.com/899665/33234993-35370a16-d230-11e7-8df7-36e774aa64fb.png)
 
-## Dockerfile
-```bash
-FROM alpine:latest
-RUN set -xe \
-	&& apk add --update --no-progress dhcp \
-	&& rm -rf /var/cache/apk/*
-RUN ["touch", "/var/lib/dhcp/dhcpd.leases"]
-CMD ["/usr/sbin/dhcpd", "-4", "-f", "-d", "--no-pid", "-cf", "/etc/dhcp/dhcpd.conf"]
-```
-## docker-compose.yml
-```bash
-version: '3'
-
-services:
-    dhcpd:
-        build: .
-        restart: unless-stopped
-        networks:
-            internal_network:
-                ipv4_address: 10.0.99.6
-
-        volumes:
-            - ./dhcpd.conf:/etc/dhcp/dhcpd.conf
-
-networks:
-    internal_network:
-        external:
-            name: macvlan0
-```
-
 ## Configuring Docker and running container
 
 1. Create a VLAN interface on the Docker host and give it an address in the subnet
